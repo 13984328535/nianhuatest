@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//app_control/admin.py=utf-8
+encoding//app_control/models.py=utf-8
+encoding//app_control/urls.py=utf-8
+encoding//app_control/utils.py=utf-8
+encoding//app_control/views.py=utf-8
+encoding//conf/default.py=utf-8
+encoding//home_application/models.py=utf-8
+encoding//home_application/urls.py=utf-8
+encoding//home_application/views.py=utf-8
+encoding/urls.py=utf-8
