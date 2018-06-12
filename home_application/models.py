@@ -9,4 +9,10 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 See the License for the specific language governing permissions and limitations under the License.
 """
 
-# from django.db import models
+from django.db import models
+
+class MultRecode(models.Model):
+    multiplier = models.IntegerField(u"乘数")
+    multiplicand = models.IntegerField(u"被乘数")
+    mult_result = models.IntegerField(u"结果")
+    
