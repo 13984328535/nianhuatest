@@ -30,7 +30,6 @@ urlpatterns = patterns(
 
 )
 
-
 handler404 = 'error_pages.views.error_404'
 handler500 = 'error_pages.views.error_500'
 handler403 = 'error_pages.views.error_403'

@@ -93,8 +93,30 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- 设置面板Start -->
-                        <!-- 设置面板End -->
+						<div class="king-widget2  m0">
+                            <div class="king-widget2-content p30">
+                                <div class="row no-space">
+                                    <div class="col-sm-6">
+                                        <div class="king-counter king-counter-lg">
+                                            <span class="king-counter-number" id="host_name"></span>
+                                            <div class="king-counter-label text-uppercase">主机名</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="king-counter king-counter-lg">
+                                            <span class="king-counter-number" id="host_time"></span>
+                                            <div class="king-counter-label text-uppercase">主机时间</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-sm-9 col-sm-offset-3">
+                                <button type="button" class="king-btn mr10  king-success" id="send_mail">发送邮件</button>
+                                <button type="button" class="king-btn king-default ">重置</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -121,6 +143,7 @@
                         % endfor    
                         </tbody>
                     </table>
+                    
 <!--                     设置面板Start
                     <template id="header_tpl_1528774861339">
                         <tr>
@@ -156,9 +179,27 @@
 			},function(res){
 				if (res.result) {
 					$("#mult_result").html(res.mult_result);
+					$("#host_name").html(res.host_name);
+					$("#host_time").html(res.host_time);
 				}
-			}, 'json');
-			
+			}, 'json');			
+		})
+	})
+	
+	$(function() {
+		$("#send_mail").click(function() {
+			var host_name = document.getElementById("host_name").innerText.trim();
+			var host_time = document.getElementById("host_time").innerText.trim();
+ 			$.post("${SITE_URL}send_mail/",{
+				'host_name':host_name,
+				'host_time':host_time
+			},function(res){
+				if (res.result) {
+					alert("发送成功");
+				}else {
+					alert("发送失败");
+				}
+			}, 'json');	 		
 		})
 	})
      /*    $(function(){
