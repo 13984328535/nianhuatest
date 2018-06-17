@@ -11,41 +11,39 @@ See the License for the specific language governing permissions and limitations 
 
 from common.mymako import render_mako_context, render_json
 #from django.http import JsonResponse   同render_json
-from home_application.models import MultRecode
+from home_application.models import MultRecode, PortScan, PortScanPara
 import os  
 import time
-import smtplib
-from email.mime.text import MIMEText
-from email.header import Header
+import json
+import nmap
+from threading import Thread
+from test.test_sax import start
 
-def send_mail_smtp(text):
-    sender = '13984328535@139.com'
-    receivers = ['13984328535@139.com']
-    message = MIMEText(text, 'plain', 'utf-8')
-    message['From'] = Header(u"13984328535@139.com系统监控", 'utf-8')
-    message['To'] =  Header(u"13984328535@139.com", 'utf-8')
-    message['Subject'] = Header('重要:系统监控告警', 'utf-8').encode() 
 
-    try:
-        smtp = smtplib.SMTP('smtp.139.com', 25) 
-        #smtp.connect() 
-        #smtp.set_debuglevel(1)
-        smtp.login('13984328535', 'anling') 
-        smtp.sendmail(sender, receivers, message.as_string()) 
-        smtp.quit()
-        return True
-    except smtplib.SMTPException:
-        return False
+def get_scan_records(request):
+    nowTime = request.POST.get('nowTime')
+    nowTime = nowTime.replace('&nbsp;', ' ')
+    #all_record = PortScan.objects.all().order_by('scan_time')
+    all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
+    records = []  
+    for record in all_record:  
+        records.append({'source_hostname':record.source_hostname,'target_ip':record.target_ip,'target_port':record.target_port,'state':record.state,'protocol':record.protocol,'scan_time':str(record.scan_time)})  
+    scan_records = json.dumps(records) 
+    return render_json({'result':True, 'all_record':scan_records})
 
-def send_mail(request):
-    host_name = request.POST.get('host_name')
-    host_time = request.POST.get('host_time')
-    text = u'主机名: %s, 故障时间: %s, 请尽快处理.' % (host_name,host_time) 
-    text = text.replace('&nbsp;', ' ')
-    if send_mail_smtp(text):
-        return  render_json({'result':True})
-    else:
-        render_json({'result':False})
+    
+
+def get_api(api_url, token):
+    url = "%s%s" % (settings.BK_PAAS_HOST, api_url)
+    textmod ={'bk_app_code':settings.APP_ID,
+    'bk_app_secret':settings.APP_TOKEN,
+    'bk_token':token }
+    textmod = urllib.urlencode(textmod)
+
+    req = urllib2.Request(url = '%s%s%s' % (url, '?', textmod))
+    res = urllib2.urlopen(req)
+    res = res.read()
+    return res;
 
 def hosttime():
     return time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))
@@ -65,10 +63,37 @@ def hostname():
         finally:  
             host.close()  
     else:  
-        return 'Unkwon hostname'    
+        return 'Unkwon hostname'        
+
+def nmapScan(hostname,tip, port):
+    nmScan = nmap.PortScanner()
+    nmScan.scan(tip, port)
+    state = nmScan[tip]['tcp'][int(port)]['state']
+    #print "[*] "+tip+"tcp/"+port+" "+state
+    portscan_recode = PortScan(source_hostname=hostname, target_ip=tip, target_port=port,state=state,protocol="TCP")
+    portscan_recode.save()
     
-def index(request):
-    return HttpResponse('Hello World')
+def portscan(request):
+    source_hostname = request.POST.get('source_hostname')
+    target_ip = request.POST.get('target_ip')
+    target_port = request.POST.get('target_port')
+    host = hostname();
+    PortScan.objects.filter().delete();
+    PortScanPara.objects.create(source_hostname=source_hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
+    if(source_hostname != ""):
+        if(host != source_hostname):
+            return
+    if(target_ip == ""):
+        return
+    if(target_port == ""):
+        target_port = "7001,8443,8081,8888,9092,2181"
+    target_ports = str(target_port).split(',')
+    for target_port in target_ports:
+        t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
+        t.start()
+    return render_json({'result':True})
+
+    
 
 def multiplication_computer(request):
     multiplier = int(request.POST.get('multiplier'))

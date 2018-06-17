@@ -16,6 +16,6 @@ urlpatterns = patterns(
     (r'^$', 'home'),
     (r'^dev-guide/$', 'dev_guide'),
     (r'^contactus/$', 'contactus'),
-    (r'^multiplication_computer/$', 'multiplication_computer'),   
-    (r'^send_mail/$', 'send_mail'),    
+    (r'^get_scan_records/$', 'get_scan_records'),   
+    (r'^portscan/$', 'portscan'),    
 )
