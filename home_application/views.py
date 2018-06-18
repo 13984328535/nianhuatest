@@ -79,18 +79,20 @@ def portscan(request):
     target_port = request.POST.get('target_port')
     host = hostname();
     PortScan.objects.filter().delete();
+    PortScanPara.objects.filter().delete();
     PortScanPara.objects.create(source_hostname=source_hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
-    if(source_hostname != ""):
-        if(host != source_hostname):
-            return
-    if(target_ip == ""):
-        return
-    if(target_port == ""):
-        target_port = "7001,8443,8081,8888,9092,2181"
-    target_ports = str(target_port).split(',')
-    for target_port in target_ports:
-        t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
-        t.start()
+    
+#     if(source_hostname != ""):
+#         if(host != source_hostname):
+#             return
+#     if(target_ip == ""):
+#         return
+#     if(target_port == ""):
+#         target_port = "7001,8443,8081,8888,9092,2181,10004,9300,8443,8008,8029,8010,8009,8019,6379,16379,3306,6380,10011,10021,10031,13031,48669,5672,15672,25672,59313,50002,48534,58725,58636,58625,58725,58636,58625,48669,48673,48668,59313,52025,52030,443,4245,10050,10051,10052,10053,10054,10041,10042,10043,10044,5260,8500,10050,10051,10052,10053,10054,10055,10056,13021,13031,13041,13051,31001,31002,31003,31004,31005,32001,32002,32003,32004,32005,33031,33062,33083,27017"
+#     target_ports = str(target_port).split(',')
+#     for target_port in target_ports:
+#         t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
+#         t.start()
     return render_json({'result':True})
 
     

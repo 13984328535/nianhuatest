@@ -18,9 +18,9 @@ import datetime
 from celery import task
 from celery.schedules import crontab
 from celery.task import periodic_task
-
 from common.log import logger
-
+from home_application.models import PortScanPara
+from home_application.views import hostname, nmapScan
 
 @task()
 def async_task(x, y):
@@ -48,7 +48,7 @@ def execute_task():
     async_task.apply_async(args=[now.hour, now.minute], eta=now + datetime.timedelta(seconds=60))
 
 
-@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
+@periodic_task(run_every=crontab(minute='*/5', hour='*', day_of_week="*"))
 def get_time():
     """
     celery 周期任务示例
@@ -59,3 +59,35 @@ def get_time():
     execute_task()
     now = datetime.datetime.now()
     logger.error(u"celery 周期任务调用成功，当前时间：{}".format(now))
+    
+
+PortScanPara_id = 1
+
+@periodic_task(run_every=crontab(minute='*/1', hour='*', day_of_week="*"))
+def get_PortScanPara():
+    """
+    celery 周期任务
+    """
+    execute_task()
+    now = datetime.datetime.now()
+    logger.error(u"celery get_PortScanPara 周期任务调用开始，当前时间：{}".format(now)) 
+    last_scantask = PortScanPara.objects.filter().last()
+    global PortScanPara_id
+    if(last_scantask.id <= PortScanPara_id):
+        return
+    PortScanPara_id = last_scantask.id
+    host = hostname(); 
+    source_hostname = last_scantask.source_hostname
+    target_ip = last_scantask.target_ip
+    target_port = last_scantask.target_port
+    if(source_hostname != ""):
+        if(host != source_hostname):
+            return
+    if(target_ip == ""):
+        return
+    if(target_port == ""):
+        target_port = "7001,8443,8081,8888,9092,2181,10004,9300,8443,8008,8029,8010,8009,8019,6379,16379,3306,6380,10011,10021,10031,13031,48669,5672,15672,25672,59313,50002,48534,58725,58636,58625,58725,58636,58625,48669,48673,48668,59313,52025,52030,443,4245,10050,10051,10052,10053,10054,10041,10042,10043,10044,5260,8500,10050,10051,10052,10053,10054,10055,10056,13021,13031,13041,13051,31001,31002,31003,31004,31005,32001,32002,32003,32004,32005,33031,33062,33083,27017"
+    target_ports = str(target_port).split(',')
+    for target_port in target_ports:
+        t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
+        t.start()  
