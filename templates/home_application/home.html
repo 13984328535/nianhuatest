@@ -108,13 +108,22 @@
                     </tr>
                 </thead>
                 <tbody> 
+                     <tr>
+                        <th>源主机名</th>
+                        <th>目标IP</th>
+                        <th>端口</th>
+                        <th>状态</th>
+                        <th>协议</th>
+                        <th>扫描时间</th>
+                    </tr>
                 </tbody>
             </table>         
         </div>
     </div>
     <script>
     $(function() {
-		$("#bt_scan").click(function() {		
+		$("#bt_scan").click(function() {	
+			$("#scan_record tbody").html("");
 			var source_hostname = $("#source_hostname").val().trim();
 			var target_ip = $("#target_ip").val().trim();
 			var target_port = $("#target_port").val().trim();				
