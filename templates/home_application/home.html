@@ -119,7 +119,7 @@
     <script>
     $(function() {
 		$("#bt_scan").click(function() {	
-			$("#scan_record tbody").html("");
+			$("#scan_record").remove();
 			var source_hostname = $("#source_hostname").val().trim();
 			var target_ip = $("#target_ip").val().trim();
 			var target_port = $("#target_port").val().trim();				
