@@ -18,8 +18,8 @@ class MultRecode(models.Model):
      
 class PortScan(models.Model):
     source_hostname = models.CharField(u"源主机名", max_length=80)
-    target_ip = models.CharField(u"目标IP",max_length=40)
-    target_port = models.CharField(u"目标端口",max_length=20)
+    target_ip = models.CharField(u"目标IP",max_length=1024)
+    target_port = models.CharField(u"目标端口",max_length=1024)
     state = models.CharField(u"状态",max_length=20)
     protocol = models.CharField(u"协议",max_length=10)   
     scan_time = models.DateTimeField(u"扫描时间", auto_now=True)
