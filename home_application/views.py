@@ -20,7 +20,6 @@ import nmap
 import re
 import socket
 from threading import Thread
-from test.test_sax import start
 
 
 def get_scan_records(request):

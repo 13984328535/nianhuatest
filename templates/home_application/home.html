@@ -82,15 +82,6 @@
                     <div class="col-sm-6">
                         <input type="text" class="form-control bk-valign-top" id="target_port" placeholder="请输入目标端口,多个端口以逗号分隔,默认扫描蓝鲸相关端口"> </div>
                 </div>
-<!--                 <div class="form-group clearfix ">
-                    <label class="col-sm-3 control-label bk-lh30 pt0">协议：</label>
-                    <div class="col-sm-9">
-                        <select name="protocol" id="protocol" class="form-control bk-valign-top">
-                            <option value="TCP">TCP</option>
-                            <option value="UDP">UDP</option>
-                        </select>
-                    </div>
-                </div> -->
                 <div class="form-group clearfix">
                     <div class="col-sm-9 col-sm-offset-3">
                         <button type="button" class="king-btn mr10  king-success" id="bt_scan">开始扫描</button>
@@ -98,6 +89,7 @@
                     </div>
                 </div>
             </form>
+            
         </div>
         <div class="king-layout2-main mt15" style="width:960px;">
             <table class="table mb0 pr15 ranger-box " id="scan_record">
@@ -136,7 +128,7 @@
 				'target_port':target_port
 			},function(res){
 				if (res.result) {
-					alert("开始扫描");
+					//alert("开始扫描");
 				}else {
 					alert("扫描失败");
 				}
@@ -198,7 +190,7 @@
 			}, 'json');			
 	}  
     //每隔1秒自动调用方法，更新  
-    window.setInterval(fscan_records, 1000);  
+    window.setInterval(fscan_records, 2000);  
       
     /* $(function() {
 		$("#bt_scan_records").click(function() {					
