@@ -66,12 +66,12 @@
                             </ul>
                         </div>
                     </div>
-                </nav>              
-                <div class="form-group clearfix ">
+                </nav>     
+<!--                 <div class="form-group clearfix ">
                     <label class="col-sm-3 control-label bk-lh30 pt0">源主机名：</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control bk-valign-top" id="source_hostname" placeholder="请输入源主机名,默认所有主机"> </div>
-                </div>
+                </div> -->
                 <div class="form-group clearfix ">
                     <label class="col-sm-3 control-label bk-lh30 pt0">目标IP：</label>
                     <div class="col-sm-6">
@@ -87,8 +87,12 @@
                         <button type="button" class="king-btn mr10  king-success" id="bt_scan">开始扫描</button>
                         <button type="button" class="king-btn king-default" id="bt_scan_records">取消</button>
                     </div>
+<!--                     <div class="col-sm-9 col-sm-offset-3">
+                        <button class="king-btn king-default king-file-btn mt5"> 选择文件
+                                        <input type="file"> </button>
+                    </div> -->
                 </div>
-            </form>
+            </form>           
             
         </div>
         <div class="king-layout2-main mt15" style="width:960px;">
@@ -119,11 +123,11 @@
 		        i=i-1;
 		    }
 			
-			var source_hostname = $("#source_hostname").val().trim();
+			//var source_hostname = $("#source_hostname").val().trim();
 			var target_ip = $("#target_ip").val().trim();
 			var target_port = $("#target_port").val().trim();				
 			$.post("${SITE_URL}portscan/",{
-				'source_hostname':source_hostname,
+				//'source_hostname':source_hostname,
 				'target_ip':target_ip,
 				'target_port':target_port
 			},function(res){

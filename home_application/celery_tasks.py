@@ -76,23 +76,25 @@ def async_portscan():
     target_ip = last_scantask.target_ip
     target_port = last_scantask.target_port
     
-    isSelf = False
-    if(check_ip(source_hostname)):
-        ipList = hostIpList()
-        for ip in ipList:
-            if(ip == source_hostname):
-                isSelf = True
-    else:
-        if(host == source_hostname):
-            isSelf = True
-            
-    if(isSelf == False):
-        return
-                   
-    target_ports = str(target_port).split(',')
-    for target_port in target_ports:
-        t = Thread(target = nmapScan,args = (str(source_hostname), str(target_ip), str(target_port)))
-        t.start()      
+#     isSelf = False
+#     if(check_ip(source_hostname)):
+#         ipList = hostIpList()
+#         for ip in ipList:
+#             if(ip == source_hostname):
+#                 isSelf = True
+#     else:
+#         if(host == source_hostname):
+#             isSelf = True
+#             
+#     if(isSelf == False):
+#         return
+    
+    target_ips = str(target_ip).split(',')
+    for target_ip in target_ips: 
+        for target_port in target_ports:        
+            target_ports = str(target_port).split(',')
+            t = Thread(target = nmapScan,args = (str(source_hostname), str(target_ip), str(target_port)))
+            t.start()      
 
 @task()
 def async_task(x, y):

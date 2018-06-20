@@ -89,16 +89,17 @@ def nmapScan(hostname,tip, port):
     PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
 def portscan(request):
-    source_hostname = request.POST.get('source_hostname')
+    #source_hostname = request.POST.get('source_hostname')
     target_ip = request.POST.get('target_ip')
     target_port = request.POST.get('target_port')
+    hostname = hostname()
       
-    if(source_hostname =="" or target_ip == "" or target_port == ""):
+    if(target_ip == "" or target_port == ""):
         return render_json({'result':False, 'text':"参数不能为空"})
      
     PortScan.objects.filter().delete();
     PortScanPara.objects.filter().delete();
-    PortScanPara.objects.create(source_hostname=source_hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
+    PortScanPara.objects.create(source_hostname=hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
      
     async_portscan.delay();
     return render_json({'result':True})
