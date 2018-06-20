@@ -39,7 +39,7 @@
             <div class="king-instruction  king-instruction-info ">
                 <h5>提示说明</h5>
                 <p>“TCP端口扫描”是一款基于蓝鲸SAAS应用的一款小工具。具有利用TCP协议对目标服务器的端口进行扫描的功能，可以指定多个端口，也可以默认扫描所有端口，以此验证该目标服务器的端口通讯是否正常。<br>
-&nbsp&nbsp本工具通过celery开发的分布式异步消息任务队列；同时需要注意本工具在正式环境会在安装APPO的服务器进行对目标服务器的扫描，在测试环境会在安装APPT的服务器进行对目标服务器的扫描；</p>
+					&nbsp&nbsp本工具通过celery开发的分布式异步消息任务队列；同时需要注意本工具在正式环境会在安装APPO的服务器进行对目标服务器的扫描，在测试环境会在安装APPT的服务器进行对目标服务器的扫描；</p>
             </div>
             <form class="form-horizontal">
                 <nav role="navigation" class="navbar navbar-default king-horizontal-nav2    f14 ">
@@ -88,10 +88,6 @@
                         <button type="button" class="king-btn mr10  king-success" id="bt_scan">开始扫描</button>
                         <button type="button" class="king-btn king-default" id="bt_scan_cancel">取消</button>
                     </div>
-<!--                     <div class="col-sm-9 col-sm-offset-3">
-                        <button class="king-btn king-default king-file-btn mt5"> 选择文件
-                                        <input type="file"> </button>
-                    </div> -->
                 </div>
             </form>           
             
@@ -124,11 +120,9 @@
 		        i=i-1;
 		    }
 			
-			//var source_hostname = $("#source_hostname").val().trim();
 			var target_ip = $("#target_ip").val().trim();
 			var target_port = $("#target_port").val().trim();				
 			$.post("${SITE_URL}portScan/",{
-				//'source_hostname':source_hostname,
 				'target_ip':target_ip,
 				'target_port':target_port
 			},function(res){
@@ -212,69 +206,8 @@
 				}
 			}, 'json');			
 	}  
-    //每隔1秒自动调用方法，更新  
     window.setInterval(fscan_records, 2000);  
       
-    /* $(function() {
-		$("#bt_scan_records").click(function() {					
-			$.post("${SITE_URL}get_scan_records/",{
-			},function(res){
-				if (res.result) {
-					all_record = JSON.parse(res.all_record); 
-                    for (var i = 0; i < all_record.length; i++) {
-	                    var row = document.getElementById("scan_record").insertRow();
-	                    if(row!=null){
-	                            cell=row.insertCell();
-	                            cell.innerHTML=all_record[i].source_hostname;
-	                            cell = row.insertCell();
-	                            cell.innerHTML=all_record[i].target_ip;
-	                            cell = row.insertCell();
-	                            cell.innerHTML=all_record[i].target_port;
-	                            cell = row.insertCell();
-	                            cell.innerHTML=all_record[i].state;
-	                            cell = row.insertCell();
-	                            cell.innerHTML=all_record[i].protocol;
-	                            cell = row.insertCell();
-	                            cell.innerHTML=all_record[i].scan_time;                                              
-	                    }   
-                    }
-				}else {
-					alert("发送失败");
-				}
-			}, 'json');			
-		})
-	})  */
-        /* $(function(){
-                function renderTpl(str, cfg) {
-                    var re = /(#(.+?)#)/g;
-
-                    return str.replace(re, function() {
-                        var val = cfg[arguments[2]]+'';
-                        if(typeof val == 'undefined') {
-                            val = '';
-                        }
-                        return val;
-                    });
-                }
-
-                // 异步请求后台数据
-                $.ajax({
-                    url: 'https://magicbox.bkclouds.cc/static_api/v3/components/table6/data.json',
-                    type: 'GET',
-                    success: function(res){
-                        var _html = ' ';
-                        var list = res.items;
-                        var tpl = $('#tpl_1529147434354').html();
-                        var headerTpl =  $('#header_tpl_1529147434354').html();
-                        for (var i=0,len=list.length; i < len; i++){
-                            var item = list[i];
-                            _html += renderTpl(tpl, item)
-                        }
-                        $('#code_1529147434354 tbody').html(_html);
-                        $('.ranger-box thead').html(renderTpl(headerTpl,res.catalogues));
-                    }
-                });
-            }); */
     </script>
 </body>
 

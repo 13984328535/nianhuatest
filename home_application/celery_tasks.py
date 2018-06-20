@@ -37,9 +37,7 @@ def check_ip(ipAddr):
     else:  
         return False
         
-def hostname():
-    #hostname = socket.gethostname()
-    #print hostname    
+def hostname():  
     sys = os.name  
     if sys == 'nt':  
         hostname = os.getenv('computername')  
@@ -57,14 +55,10 @@ def hostname():
 def nmapScan(hostname,tip, port):
     portscan_recode = PortScan(source_hostname=hostname, target_ip=tip, target_port=port,state="正在扫描...",protocol="TCP")
     portscan_recode.save()
-    logger.error(u"celery before nmapScan任务开始执行")
     nmScan = nmap.PortScanner()
     nmScan.scan(tip, port, arguments='-T4 -Pn')
-    logger.error(u"celery nmapScan任务开始执行")
     state = nmScan[tip]['tcp'][int(port)]['state']
-    #print "[*] "+tip+"tcp/"+port+" "+state
     PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
-    logger.error(u"celery nmapScan任务执行结束")
 
 @task()
 def async_portscan():
@@ -76,18 +70,6 @@ def async_portscan():
     target_ip = last_scantask.target_ip
     target_port = last_scantask.target_port
     
-#     isSelf = False
-#     if(check_ip(source_hostname)):
-#         ipList = hostIpList()
-#         for ip in ipList:
-#             if(ip == source_hostname):
-#                 isSelf = True
-#     else:
-#         if(host == source_hostname):
-#             isSelf = True
-#             
-#     if(isSelf == False):
-#         return
     target_ips = str(target_ip).split(',')
     target_ports = str(target_port).split(',')
     for target_ip in target_ips: 

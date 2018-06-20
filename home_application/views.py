@@ -23,8 +23,6 @@ from threading import Thread
 
 
 def get_scan_records(request):
-#     nowTime = request.POST.get('nowTime')
-#     nowTime = nowTime.replace('&nbsp;', ' ')
     all_record = PortScan.objects.all().order_by('id','target_ip','target_port')
     #all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
     all_end = PortScan.objects.filter(state="正在扫描...").count()
@@ -87,7 +85,6 @@ def nmapScan(hostname,tip, port):
     nmScan = nmap.PortScanner()
     nmScan.scan(tip, port)
     state = nmScan[tip]['tcp'][int(port)]['state']
-    #print "[*] "+tip+"tcp/"+port+" "+state
     PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
 def portScanCancel(request):
@@ -116,27 +113,11 @@ def portScan(request):
     async_portscan.delay();
     return render_json({'result':True})
 
-    
-
-def multiplication_computer(request):
-    multiplier = int(request.POST.get('multiplier'))
-    multiplicand = int(request.POST.get('multiplicand'))
-    mult_result = multiplier * multiplicand
-    mult_recode = MultRecode(multiplier=multiplier, multiplicand=multiplicand, mult_result=mult_result)
-    mult_recode.save()
-    host_name = hostname();
-    host_time = hosttime();
-    return render_json({'result':True, 'mult_result':mult_result, 'host_name':host_name, 'host_time':host_time})
-
 def home(request):
     """
     首页
     """
-    all_record = MultRecode.objects.all()
-    ctx = {
-        'all_record': all_record
-    }
-    return render_mako_context(request, '/home_application/home.html',ctx)
+    return render_mako_context(request, '/home_application/home.html')
 
 
 def dev_guide(request):
