@@ -90,9 +90,9 @@ def async_portscan():
 #         return
     
     target_ips = str(target_ip).split(',')
+    target_ports = str(target_port).split(',')
     for target_ip in target_ips: 
-        for target_port in target_ports:        
-            target_ports = str(target_port).split(',')
+        for target_port in target_ports:                    
             t = Thread(target = nmapScan,args = (str(source_hostname), str(target_ip), str(target_port)))
             t.start()      
 
