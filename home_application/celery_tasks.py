@@ -88,13 +88,14 @@ def async_portscan():
 #             
 #     if(isSelf == False):
 #         return
-    
     target_ips = str(target_ip).split(',')
+    logger.error(u"celery 定时任务执行成功，target_ips".target_ips)
     target_ports = str(target_port).split(',')
+    logger.error(u"celery 定时任务执行成功，target_ports".target_port)
     for target_ip in target_ips: 
-        for target_port in target_ports:                    
+        for target_port in target_ports: 
             t = Thread(target = nmapScan,args = (str(source_hostname), str(target_ip), str(target_port)))
-            t.start()      
+            t.start()             
 
 @task()
 def async_task(x, y):
