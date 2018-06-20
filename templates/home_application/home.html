@@ -38,7 +38,7 @@
         <div class="king-layout1-header">
             <div class="king-instruction  king-instruction-info ">
                 <h5>提示说明</h5>
-                <p>1.源主机名: 如果输入源主机名, 则只有该主机会进行扫描, 不输入则会触发所有主机扫描.  2.端口以英文逗号隔开, 如果不输入, 则默认扫描所有蓝鲸相关端口.  3.扫描耗时较长, 请耐心等待, 不要频繁开始扫描.</p>
+                <p>1.目标IP及端口以英文逗号隔开.</p>
             </div>
             <form class="form-horizontal">
                 <nav role="navigation" class="navbar navbar-default king-horizontal-nav2    f14 ">
@@ -132,7 +132,7 @@
 				'target_port':target_port
 			},function(res){
 				if (res.result) {
-					//alert("开始扫描");
+					document.getElementById("bt_scan").setAttribute("disabled", true);
 				}else {
 					alert(res.text);
 				}
@@ -162,6 +162,9 @@
 				'nowTime':nowTime
 			},function(res){
 				if (res.result) {
+					if(res.is_end){
+						document.getElementById("bt_scan").removeAttribute("disabled");
+					}
 				    var table = document.getElementById("scan_record");
 				    var len = table.rows.length; 
 				    for(var i = 1; i < len;i++){

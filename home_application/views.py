@@ -27,13 +27,15 @@ def get_scan_records(request):
 #     nowTime = nowTime.replace('&nbsp;', ' ')
     all_record = PortScan.objects.all().order_by('id','target_ip','target_port')
     #all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
-    if len(all_record) == 0:
-        return render_json({'result':False})
+    all_end = PortScan.objects.filter(state="正在扫描...").count()
+    is_end = False;
+    if all_end == 0:
+        is_end = True
     records = []  
     for record in all_record:  
         records.append({'source_hostname':record.source_hostname,'target_ip':record.target_ip,'target_port':record.target_port,'state':record.state,'protocol':record.protocol,'scan_time':str(record.scan_time)})  
     scan_records = json.dumps(records) 
-    return render_json({'result':True, 'all_record':scan_records})
+    return render_json({'result':True, 'all_record':scan_records, 'is_end':is_end})
 
     
 
