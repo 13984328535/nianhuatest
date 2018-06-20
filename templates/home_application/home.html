@@ -184,6 +184,7 @@
 	                            cell.innerHTML=all_record[i].target_port;
 	                            cell = row.insertCell();
 	                            cell.innerHTML=all_record[i].state;
+	                            if(all_record[i].state == "closed"){cell.innerHTML.style.backgroundColor = "red"};
 	                            cell = row.insertCell();
 	                            cell.innerHTML=all_record[i].protocol;
 	                            cell = row.insertCell();
