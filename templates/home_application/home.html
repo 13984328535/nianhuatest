@@ -183,8 +183,8 @@
 	                            cell = row.insertCell();
 	                            cell.innerHTML=all_record[i].target_port;
 	                            cell = row.insertCell();
-	                            cell.innerHTML=all_record[i].state;
-	                            if(all_record[i].state == "closed"){cell.innerHTML.style.backgroundColor = "red"};
+	                            if(all_record[i].state == "open"){cell.style.color = "green"}else{cell.style.color = "red"};
+	                            cell.innerHTML=all_record[i].state;	                            
 	                            cell = row.insertCell();
 	                            cell.innerHTML=all_record[i].protocol;
 	                            cell = row.insertCell();
