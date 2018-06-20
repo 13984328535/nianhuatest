@@ -92,14 +92,14 @@ def portscan(request):
     #source_hostname = request.POST.get('source_hostname')
     target_ip = request.POST.get('target_ip')
     target_port = request.POST.get('target_port')
-    hostname = hostname()
+    host = hostname()
       
     if(target_ip == "" or target_port == ""):
         return render_json({'result':False, 'text':"参数不能为空"})
      
     PortScan.objects.filter().delete();
     PortScanPara.objects.filter().delete();
-    PortScanPara.objects.create(source_hostname=hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
+    PortScanPara.objects.create(source_hostname=host,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
      
     async_portscan.delay();
     return render_json({'result':True})
