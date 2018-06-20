@@ -22,6 +22,7 @@ from common.log import logger
 import os
 from home_application.models import PortScanPara,PortScan
 from threading import Thread
+import nmap
 
 def hostname():
     #hostname = socket.gethostname()
@@ -43,6 +44,7 @@ def hostname():
 def nmapScan(hostname,tip, port):
     portscan_recode = PortScan(source_hostname=hostname, target_ip=tip, target_port=port,state="正在扫描...",protocol="TCP")
     portscan_recode.save()
+    logger.error(u"celery before nmapScan任务开始执行")
     nmScan = nmap.PortScanner()
     nmScan.scan(tip, port)
     logger.error(u"celery nmapScan任务开始执行")
