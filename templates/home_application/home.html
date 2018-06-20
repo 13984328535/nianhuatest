@@ -38,7 +38,8 @@
         <div class="king-layout1-header">
             <div class="king-instruction  king-instruction-info ">
                 <h5>提示说明</h5>
-                <p>1.目标IP及端口以英文逗号隔开.</p>
+                <p>“TCP端口扫描”是一款基于蓝鲸SAAS应用的一款小工具。具有利用TCP协议对目标服务器的端口进行扫描的功能，可以指定多个端口，也可以默认扫描所有端口，以此验证该目标服务器的端口通讯是否正常。
+本工具通过celery开发的分布式异步消息任务队列；同时需要注意本工具在正式环境需要在安装APPO的服务器进行对目标服务器的扫描，在测试环境需要在安装APPT的服务器进行对目标服务器的扫描；</p>
             </div>
             <form class="form-horizontal">
                 <nav role="navigation" class="navbar navbar-default king-horizontal-nav2    f14 ">
@@ -75,12 +76,12 @@
                 <div class="form-group clearfix ">
                     <label class="col-sm-3 control-label bk-lh30 pt0">目标IP：</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control bk-valign-top" id="target_ip" placeholder="请输入目标IP"> </div>
+                        <input type="text" class="form-control bk-valign-top" id="target_ip" placeholder="请输入目标IP,多个IP以逗号分隔"> </div>
                 </div>
                 <div class="form-group clearfix ">
                     <label class="col-sm-3 control-label bk-lh30 pt0">目标端口：</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control bk-valign-top" id="target_port" placeholder="请输入目标端口,多个端口以逗号分隔,默认扫描蓝鲸相关端口"> </div>
+                        <input type="text" class="form-control bk-valign-top" id="target_port" placeholder="请输入目标端口,多个端口以逗号分隔"> </div>
                 </div>
                 <div class="form-group clearfix">
                     <div class="col-sm-9 col-sm-offset-3">
