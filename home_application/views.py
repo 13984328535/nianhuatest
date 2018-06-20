@@ -22,10 +22,10 @@ from test.test_sax import start
 
 
 def get_scan_records(request):
-    nowTime = request.POST.get('nowTime')
-    nowTime = nowTime.replace('&nbsp;', ' ')
-    #all_record = PortScan.objects.all().order_by('scan_time')
-    all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
+#     nowTime = request.POST.get('nowTime')
+#     nowTime = nowTime.replace('&nbsp;', ' ')
+    all_record = PortScan.objects.all().order_by('scan_time')
+    #all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
     if len(all_record) == 0:
         return render_json({'result':False})
     records = []  
