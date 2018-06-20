@@ -12,6 +12,7 @@ See the License for the specific language governing permissions and limitations 
 from common.mymako import render_mako_context, render_json
 #from django.http import JsonResponse   同render_json
 from home_application.models import MultRecode, PortScan, PortScanPara
+from home_application.celery_tasks import execute_portscan
 import os  
 import time
 import json
@@ -25,6 +26,8 @@ def get_scan_records(request):
     nowTime = nowTime.replace('&nbsp;', ' ')
     #all_record = PortScan.objects.all().order_by('scan_time')
     all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
+    if len(all_record) == 0:
+        return render_json({'result':False})
     records = []  
     for record in all_record:  
         records.append({'source_hostname':record.source_hostname,'target_ip':record.target_ip,'target_port':record.target_port,'state':record.state,'protocol':record.protocol,'scan_time':str(record.scan_time)})  
@@ -63,25 +66,27 @@ def hostname():
         finally:  
             host.close()  
     else:  
-        return 'Unkwon hostname'        
+        return 'Unkwon hostname'      
 
 def nmapScan(hostname,tip, port):
+    portscan_recode = PortScan(source_hostname=hostname, target_ip=tip, target_port=port,state="正在扫描...",protocol="TCP")
+    portscan_recode.save()
     nmScan = nmap.PortScanner()
     nmScan.scan(tip, port)
     state = nmScan[tip]['tcp'][int(port)]['state']
     #print "[*] "+tip+"tcp/"+port+" "+state
-    portscan_recode = PortScan(source_hostname=hostname, target_ip=tip, target_port=port,state=state,protocol="TCP")
-    portscan_recode.save()
+    PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
 def portscan(request):
-    source_hostname = request.POST.get('source_hostname')
-    target_ip = request.POST.get('target_ip')
-    target_port = request.POST.get('target_port')
-    host = hostname();
-    PortScan.objects.filter().delete();
-    PortScanPara.objects.filter().delete();
-    PortScanPara.objects.create(source_hostname=source_hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
-    
+    execute_portscan();
+#     source_hostname = request.POST.get('source_hostname')
+#     target_ip = request.POST.get('target_ip')
+#     target_port = request.POST.get('target_port')
+#     host = hostname();
+#     PortScan.objects.filter().delete();
+#     PortScanPara.objects.filter().delete();
+#     PortScanPara.objects.create(source_hostname=source_hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
+#     
 #     if(source_hostname != ""):
 #         if(host != source_hostname):
 #             return
