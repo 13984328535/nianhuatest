@@ -94,7 +94,7 @@ def portscan(request):
     target_port = request.POST.get('target_port')
       
     if(source_hostname =="" or target_ip == "" or target_port == ""):
-        return
+        return render_json({'result':False, 'text':"参数不能为空"})
      
     PortScan.objects.filter().delete();
     PortScanPara.objects.filter().delete();

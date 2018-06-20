@@ -66,7 +66,7 @@
                             </ul>
                         </div>
                     </div>
-                </nav>
+                </nav>              
                 <div class="form-group clearfix ">
                     <label class="col-sm-3 control-label bk-lh30 pt0">源主机名：</label>
                     <div class="col-sm-6">
@@ -130,7 +130,7 @@
 				if (res.result) {
 					//alert("开始扫描");
 				}else {
-					alert("扫描失败");
+					alert(res.text);
 				}
 			}, 'json');			
 		})
