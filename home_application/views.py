@@ -90,7 +90,12 @@ def nmapScan(hostname,tip, port):
     #print "[*] "+tip+"tcp/"+port+" "+state
     PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     
-def portscan(request):
+def portScanCancel(request):
+    PortScan.objects.filter().delete();
+    PortScanPara.objects.filter().delete();
+    return render_json({'result':True})
+        
+def portScan(request):
     #source_hostname = request.POST.get('source_hostname')
     target_ip = request.POST.get('target_ip')
     target_port = request.POST.get('target_port')

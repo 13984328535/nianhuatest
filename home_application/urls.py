@@ -17,5 +17,6 @@ urlpatterns = patterns(
     (r'^dev-guide/$', 'dev_guide'),
     (r'^contactus/$', 'contactus'),
     (r'^get_scan_records/$', 'get_scan_records'),   
-    (r'^portscan/$', 'portscan'),    
+    (r'^portScan/$', 'portScan'),    
+    (r'^portScanCancel/$', 'portScanCancel'),   
 )

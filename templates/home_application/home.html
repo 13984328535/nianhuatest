@@ -86,7 +86,7 @@
                 <div class="form-group clearfix">
                     <div class="col-sm-9 col-sm-offset-3">
                         <button type="button" class="king-btn mr10  king-success" id="bt_scan">开始扫描</button>
-                        <button type="button" class="king-btn king-default" id="bt_scan_records">取消</button>
+                        <button type="button" class="king-btn king-default" id="bt_scan_cancel">取消</button>
                     </div>
 <!--                     <div class="col-sm-9 col-sm-offset-3">
                         <button class="king-btn king-default king-file-btn mt5"> 选择文件
@@ -127,7 +127,7 @@
 			//var source_hostname = $("#source_hostname").val().trim();
 			var target_ip = $("#target_ip").val().trim();
 			var target_port = $("#target_port").val().trim();				
-			$.post("${SITE_URL}portscan/",{
+			$.post("${SITE_URL}portScan/",{
 				//'source_hostname':source_hostname,
 				'target_ip':target_ip,
 				'target_port':target_port
@@ -140,6 +140,20 @@
 			}, 'json');			
 		})
 	})	
+	
+    $(function() {
+		$("#bt_scan_cancel").click(function() {				
+			$.post("${SITE_URL}portScanCancel/",{
+			},function(res){
+				if (res.result) {
+					document.getElementById("bt_scan").removeAttribute("disabled");
+				}else {
+					alert(res.text);
+				}
+			}, 'json');			
+		})
+	})	
+		
 	
 	Date.prototype.Format = function (fmt) { //author: meizz
 		var o = {
