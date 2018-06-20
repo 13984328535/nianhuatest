@@ -59,7 +59,7 @@ def nmapScan(hostname,tip, port):
     portscan_recode.save()
     logger.error(u"celery before nmapScan任务开始执行")
     nmScan = nmap.PortScanner()
-    nmScan.scan(tip, port)
+    nmScan.scan(tip, port, arguments='-T4')
     logger.error(u"celery nmapScan任务开始执行")
     state = nmScan[tip]['tcp'][int(port)]['state']
     #print "[*] "+tip+"tcp/"+port+" "+state
