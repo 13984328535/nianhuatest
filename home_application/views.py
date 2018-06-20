@@ -17,6 +17,8 @@ import os
 import time
 import json
 import nmap
+import re
+import socket
 from threading import Thread
 from test.test_sax import start
 
@@ -24,7 +26,7 @@ from test.test_sax import start
 def get_scan_records(request):
 #     nowTime = request.POST.get('nowTime')
 #     nowTime = nowTime.replace('&nbsp;', ' ')
-    all_record = PortScan.objects.all().order_by('scan_time')
+    all_record = PortScan.objects.all().order_by('id')
     #all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
     if len(all_record) == 0:
         return render_json({'result':False})
@@ -66,7 +68,17 @@ def hostname():
         finally:  
             host.close()  
     else:  
-        return 'Unkwon hostname'      
+        return 'Unkwon hostname'    
+    
+def hostIpList():  
+    return socket.gethostbyname_ex(socket.gethostname())[2]   
+
+def check_ip(ipAddr):
+    compile_ip=re.compile('^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$')
+    if compile_ip.match(ipAddr):
+        return True 
+    else:  
+        return False
 
 def nmapScan(hostname,tip, port):
     portscan_recode = PortScan(source_hostname=hostname, target_ip=tip, target_port=port,state="正在扫描...",protocol="TCP")
@@ -81,22 +93,15 @@ def portscan(request):
     source_hostname = request.POST.get('source_hostname')
     target_ip = request.POST.get('target_ip')
     target_port = request.POST.get('target_port')
-    host = hostname();
-     
-    if(target_ip == ""):
+      
+    if(source_hostname =="" or target_ip == "" or target_port == ""):
         return
-    if(target_port == ""):
-        target_port = "7001,8443,8081,8888,9092,2181,10004,9300,8443,8008,8029,8010,8009,8019,6379,16379,3306,6380,10011,10021,10031,13031,48669,5672,15672,25672,59313,50002,48534,58725,58636,58625,58725,58636,58625,48669,48673,48668,59313,52025,52030,443,4245,10050,10051,10052,10053,10054,10041,10042,10043,10044,5260,8500,10050,10051,10052,10053,10054,10055,10056,13021,13031,13041,13051,31001,31002,31003,31004,31005,32001,32002,32003,32004,32005,33031,33062,33083,27017"    
-    
+     
     PortScan.objects.filter().delete();
     PortScanPara.objects.filter().delete();
     PortScanPara.objects.create(source_hostname=source_hostname,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
-    
+     
     async_portscan.delay();
-#     target_ports = str(target_port).split(',')
-#     for target_port in target_ports:
-#         t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
-#         t.start()
     return render_json({'result':True})
 
     

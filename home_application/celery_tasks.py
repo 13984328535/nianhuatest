@@ -24,7 +24,7 @@ import time
 from home_application.models import PortScanPara,PortScan
 from threading import Thread
 import nmap
-
+    
 def hostname():
     #hostname = socket.gethostname()
     #print hostname    
@@ -50,7 +50,6 @@ def nmapScan(hostname,tip, port):
     nmScan.scan(tip, port)
     logger.error(u"celery nmapScan任务开始执行")
     state = nmScan[tip]['tcp'][int(port)]['state']
-    logger.error(u"celery nmapScan任务执行成功,开始入库")
     #print "[*] "+tip+"tcp/"+port+" "+state
     PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
     logger.error(u"celery nmapScan任务执行结束")
@@ -65,14 +64,19 @@ def async_portscan():
     target_ip = last_scantask.target_ip
     target_port = last_scantask.target_port
     
-    if(source_hostname != ""):
-        if(host != source_hostname):
-            return
-    if(target_ip == ""):
+    isSelf = False
+    if(check_ip(source_hostname)):
+        ipList = hostIpList()
+        for ip in ipList:
+            if(ip == source_hostname):
+                isSelf = True
+    else:
+        if(host == source_hostname):
+            isSelf = True
+            
+    if(isSelf == False):
         return
-    if(target_port == ""):
-        target_port = "7001,8443,8081,8888,9092,2181,10004,9300,8443,8008,8029,8010,8009,8019,6379,16379,3306,6380,10011,10021,10031,13031,48669,5672,15672,25672,59313,50002,48534,58725,58636,58625,58725,58636,58625,48669,48673,48668,59313,52025,52030,443,4245,10050,10051,10052,10053,10054,10041,10042,10043,10044,5260,8500,10050,10051,10052,10053,10054,10055,10056,13021,13031,13041,13051,31001,31002,31003,31004,31005,32001,32002,32003,32004,32005,33031,33062,33083,27017"
-        
+                   
     target_ports = str(target_port).split(',')
     for target_port in target_ports:
         t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
