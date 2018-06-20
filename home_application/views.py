@@ -99,9 +99,9 @@ def portscan(request):
     if(target_ip == "" or target_port == ""):
         return render_json({'result':False, 'text':"参数不能为空"})
     
-    target_ips = str(target_ip).split(',')
-    for target_ip in target_ips: 
-        if(check_ip(target_ip) == False):
+    ips = str(target_ip).split(',')
+    for ip in ips: 
+        if(check_ip(ip) == False):
             return render_json({'result':False, 'text':"请输入正确的目标IP"})
       
     PortScan.objects.filter().delete();
