@@ -20,6 +20,7 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 from common.log import logger
 from home_application.models import PortScanPara
+from home_application.views import hostname, nmapScan
 from threading import Thread
 
 
