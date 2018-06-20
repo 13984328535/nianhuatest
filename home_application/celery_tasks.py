@@ -91,7 +91,7 @@ def async_portscan():
                    
     target_ports = str(target_port).split(',')
     for target_port in target_ports:
-        t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
+        t = Thread(target = nmapScan,args = (str(source_hostname), str(target_ip), str(target_port)))
         t.start()      
 
 @task()
