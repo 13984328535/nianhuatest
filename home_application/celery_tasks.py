@@ -19,31 +19,33 @@ from celery import task
 from celery.schedules import crontab
 from celery.task import periodic_task
 from common.log import logger
+from threading import Thread
 from home_application.models import PortScanPara
 from home_application.views import hostname, nmapScan
-from threading import Thread
+
 
 @task()
 def async_portscan():
     logger.error(u"celery 定时任务执行成功，async_portscan")
-    return x + y
-
-
-def execute_portscan():
-    """
-    执行 celery 异步任务
-
-    调用celery任务方法:
-        task.delay(arg1, arg2, kwarg1='x', kwarg2='y')
-        task.apply_async(args=[arg1, arg2], kwargs={'kwarg1': 'x', 'kwarg2': 'y'})
-        delay(): 简便方法，类似调用普通函数
-        apply_async(): 设置celery的额外执行选项时必须使用该方法，如定时（eta）等
-                      详见 ：http://celery.readthedocs.org/en/latest/userguide/calling.html
-    """
-    now = datetime.datetime.now()
-    logger.error(u"celery 定时任务启动，execute_portscan，当前时间：{}")
-    # 调用定时任务
-    async_portscan.apply_async()
+    last_scantask = PortScanPara.objects.filter().last()
+    host = hostname(); 
+    
+    source_hostname = last_scantask.source_hostname
+    target_ip = last_scantask.target_ip
+    target_port = last_scantask.target_port
+    
+    if(source_hostname != ""):
+        if(host != source_hostname):
+            return
+    if(target_ip == ""):
+        return
+    if(target_port == ""):
+        target_port = "7001,8443,8081,8888,9092,2181,10004,9300,8443,8008,8029,8010,8009,8019,6379,16379,3306,6380,10011,10021,10031,13031,48669,5672,15672,25672,59313,50002,48534,58725,58636,58625,58725,58636,58625,48669,48673,48668,59313,52025,52030,443,4245,10050,10051,10052,10053,10054,10041,10042,10043,10044,5260,8500,10050,10051,10052,10053,10054,10055,10056,13021,13031,13041,13051,31001,31002,31003,31004,31005,32001,32002,32003,32004,32005,33031,33062,33083,27017"
+        
+    target_ports = str(target_port).split(',')
+    for target_port in target_ports:
+        t = Thread(target = nmapScan,args = (str(host), str(target_ip), str(target_port)))
+        t.start()      
 
 @task()
 def async_task(x, y):
