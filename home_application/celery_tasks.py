@@ -19,7 +19,7 @@ from celery import task
 from celery.schedules import crontab
 from celery.task import periodic_task
 from common.log import logger
-from home_application.models import PortScanPara
+from home_application.models import PortScanPara,PortScan
 from threading import Thread
 
 def hostname():
