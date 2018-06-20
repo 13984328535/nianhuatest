@@ -45,10 +45,12 @@ def nmapScan(hostname,tip, port):
     portscan_recode.save()
     nmScan = nmap.PortScanner()
     nmScan.scan(tip, port)
+    logger.error(u"celery nmapScan任务开始执行")
     state = nmScan[tip]['tcp'][int(port)]['state']
+    logger.error(u"celery nmapScan任务执行成功,开始入库")
     #print "[*] "+tip+"tcp/"+port+" "+state
     PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
-    
+    logger.error(u"celery nmapScan任务执行结束")
 
 @task()
 def async_portscan():
