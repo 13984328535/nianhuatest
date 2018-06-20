@@ -20,9 +20,34 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 from common.log import logger
 from home_application.models import PortScanPara
-from home_application.views import hostname, nmapScan
 from threading import Thread
 
+def hostname():
+    #hostname = socket.gethostname()
+    #print hostname    
+    sys = os.name  
+    if sys == 'nt':  
+        hostname = os.getenv('computername')  
+        return hostname  
+    elif sys == 'posix':  
+        host = os.popen('echo $HOSTNAME')  
+        try:  
+            hostname = host.read()  
+            return hostname  
+        finally:  
+            host.close()  
+    else:  
+        return 'Unkwon hostname'  
+    
+def nmapScan(hostname,tip, port):
+    portscan_recode = PortScan(source_hostname=hostname, target_ip=tip, target_port=port,state="正在扫描...",protocol="TCP")
+    portscan_recode.save()
+    nmScan = nmap.PortScanner()
+    nmScan.scan(tip, port)
+    state = nmScan[tip]['tcp'][int(port)]['state']
+    #print "[*] "+tip+"tcp/"+port+" "+state
+    PortScan.objects.filter(source_hostname=hostname, target_ip=tip, target_port=port).update(state=state, scan_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())))
+    
 
 @task()
 def async_portscan():
