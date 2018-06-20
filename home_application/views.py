@@ -25,7 +25,7 @@ from threading import Thread
 def get_scan_records(request):
 #     nowTime = request.POST.get('nowTime')
 #     nowTime = nowTime.replace('&nbsp;', ' ')
-    all_record = PortScan.objects.all().order_by('id')
+    all_record = PortScan.objects.all().order_by('id','target_ip','target_port')
     #all_record = PortScan.objects.filter(scan_time__gt=nowTime).order_by('scan_time')
     if len(all_record) == 0:
         return render_json({'result':False})
@@ -93,14 +93,14 @@ def portscan(request):
     target_ip = request.POST.get('target_ip')
     target_port = request.POST.get('target_port')
     host = hostname()
-      
+       
     if(target_ip == "" or target_port == ""):
         return render_json({'result':False, 'text':"参数不能为空"})
-     
+      
     PortScan.objects.filter().delete();
     PortScanPara.objects.filter().delete();
     PortScanPara.objects.create(source_hostname=host,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
-     
+      
     async_portscan.delay();
     return render_json({'result':True})
 
