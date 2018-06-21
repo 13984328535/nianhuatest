@@ -105,6 +105,11 @@ def portScan(request):
     for ip in ips: 
         if(check_ip(ip) == False):
             return render_json({'result':False, 'text':"请输入正确的目标IP"})
+        
+    ports = str(target_port).split(',')
+    for port in ports: 
+        if(port.isdigit() == False):
+            return render_json({'result':False, 'text':"请输入正确的目标IP"})        
       
     PortScan.objects.filter().delete();
     PortScanPara.objects.filter().delete();
