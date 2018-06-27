@@ -95,37 +95,37 @@ def portScanCancel(request):
     return render_json({'result':True})
         
 def portScan(request):
+    from blueking.component.shortcuts import get_client_by_request
+    client = get_client_by_request(request)
+    kwargs = {
+        "app_id":3, 
+    }
+    result = client.cc.get_app_host_list(kwargs)
+    return render_json(result)
     
-#     client = get_client_by_request(request)
-#     kwargs = {'app_id':3}
-#     result = client.bk_login.get_user()
-#     logger.error(u"get_user=" + result)
-#     result = client.cc.get_app_host_list(kwargs)
-#     logger.error(u"get_app_host_list=" + result)
-    
-    target_ip = request.POST.get('target_ip')
-    target_port = request.POST.get('target_port')
-    host = hostname()
-        
-    if(target_ip == "" or target_port == ""):
-        return render_json({'result':False, 'text':"参数不能为空"})
-     
-    ips = str(target_ip).split(',')
-    for ip in ips: 
-        if(check_ip(ip) == False):
-            return render_json({'result':False, 'text':"请输入正确的目标IP"})
-         
-    ports = str(target_port).split(',')
-    for port in ports: 
-        if(port.isdigit() == False):
-            return render_json({'result':False, 'text':"请输入正确的目标端口"})        
-       
-    PortScan.objects.filter().delete();
-    PortScanPara.objects.filter().delete();
-    PortScanPara.objects.create(source_hostname=host,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
-       
-    async_portscan.delay();
-    return render_json({'result':True})
+#     target_ip = request.POST.get('target_ip')
+#     target_port = request.POST.get('target_port')
+#     host = hostname()
+#         
+#     if(target_ip == "" or target_port == ""):
+#         return render_json({'result':False, 'text':"参数不能为空"})
+#      
+#     ips = str(target_ip).split(',')
+#     for ip in ips: 
+#         if(check_ip(ip) == False):
+#             return render_json({'result':False, 'text':"请输入正确的目标IP"})
+#          
+#     ports = str(target_port).split(',')
+#     for port in ports: 
+#         if(port.isdigit() == False):
+#             return render_json({'result':False, 'text':"请输入正确的目标端口"})        
+#        
+#     PortScan.objects.filter().delete();
+#     PortScanPara.objects.filter().delete();
+#     PortScanPara.objects.create(source_hostname=host,target_ip=target_ip,target_port=target_port,protocol="TCP",opere_hostname="")
+#        
+#     async_portscan.delay();
+#     return render_json({'result':True})
 
 def home(request):
     """
