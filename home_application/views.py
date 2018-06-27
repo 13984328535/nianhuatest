@@ -20,6 +20,7 @@ import json
 import nmap
 import re
 import socket
+from common.log import logger
 from threading import Thread
 
 
